@@ -30,7 +30,9 @@ func createTables() {
     Name TEXT NOT NULL,
     Description TEXT NOT NULL,
     Price REAL NOT NULL CHECK (Price > 0),
-    Quantity INTEGER NOT NULL CHECK (Quantity >= 0)
+    Quantity INTEGER NOT NULL CHECK (Quantity >= 0),
+	User_Id INTEGER,
+	FOREIGN KEY(User_Id) REFERENCES users(Id)
 );
 `
 	_, err := DB.Exec(createProductsTable)

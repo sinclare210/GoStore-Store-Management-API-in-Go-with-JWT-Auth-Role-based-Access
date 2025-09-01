@@ -1,4 +1,4 @@
-package jwt
+package utils
 
 import (
 	"errors"
@@ -13,8 +13,8 @@ func HashPassword(password string) (string, error) {
 	return string(HashedPassword), nil
 }
 
-func UnHashPassWord(hashedPassword,passsord string)(error){
-	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword),[]byte(passsord))
+func CheckHashPassWord(hashedPassword, passsord string) error {
+	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(passsord))
 	if err != nil {
 		return errors.New("invalid credentials")
 	}

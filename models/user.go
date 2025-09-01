@@ -4,7 +4,8 @@ import (
 	"errors"
 
 	"github.com/sinclare210/GoStore-Store-Management-API-in-Go-with-JWT-Auth-Role-based-Access/db"
-	"github.com/sinclare210/GoStore-Store-Management-API-in-Go-with-JWT-Auth-Role-based-Access/jwt"
+
+	"github.com/sinclare210/GoStore-Store-Management-API-in-Go-with-JWT-Auth-Role-based-Access/utils"
 )
 
 type User struct {
@@ -26,9 +27,9 @@ func (user *User) CreateUser() error {
 		return errors.New("invalid statement")
 	}
 	defer stmt.Close()
-	hashedPassword, err := jwt.HashPassword(user.Password)
+	hashedPassword, err := utils.HashPassword(user.Password)
 	if err != nil {
-	
+
 		return errors.New("could not hash password")
 	}
 
@@ -41,6 +42,21 @@ func (user *User) CreateUser() error {
 	return nil
 }
 
-func (user *User)LoginUser(){
+func (user *User) LoginUser(password string) error {
+	query := `
+	SELECT Id, Email,Password,Role FROM users WHERE Email = ?
+	`
 
+	row := db.DB.QueryRow(query, user.Email)
+	err := row.Scan(&user.Id, &user.Email, &user.Password, &user.Role)
+	if err != nil {
+		return errors.New("invalid query or user not found")
+	}
+
+	err = utils.CheckHashPassWord(user.Password, password)
+	if err != nil {
+		return errors.New("invalid credentials")
+	}
+
+	return nil
 }
