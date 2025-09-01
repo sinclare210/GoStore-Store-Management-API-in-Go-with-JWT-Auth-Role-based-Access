@@ -1,0 +1,11 @@
+POST http://localhost:8080/products
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFbWFpbCI6Im9sYWp1ZG9pZ2dnckBnbWFpbC5jb20iLCJJZCI6MiwiUm9sZSI6InVzZXIiLCJleHAiOjE3NTY3Njg4ODB9.8NucSYlCagkz18HRzAkiFWjii9dY3uGthyiYXai7SPs
+
+{
+    "Name": "Wireless Mouse",
+    "Description": "A smooth wireless mouse with ergonomic design",
+    "Price": 25.99,
+    "Quantity": 50
+    
+}
