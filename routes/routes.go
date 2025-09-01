@@ -8,9 +8,9 @@ import (
 func RegisterRoutes(server *gin.Engine) {
 	server.POST("/signup", createUser)
 	server.POST("/login", loginUser)
-
 	authenticated := server.Group("/")
 	authenticated.Use(middleware.Authenticate)
-
-	authenticated.POST("/products", createProduct)
+	authenticated.POST("/product", createProduct)
+	server.GET("/product", getProducts)
+	server.GET("/product/:id", getProduct)
 }
