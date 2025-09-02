@@ -70,14 +70,12 @@ func getProduct(context *gin.Context) {
 
 }
 
-func deleteProduct(context *gin.Context){
+func deleteProduct(context *gin.Context) {
 	Id, err := strconv.ParseInt(context.Param("id"), 10, 64)
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"message": "Invalid Id"})
 		return
 	}
-
-	
 
 	product, err := models.GetProductById(Id) // make sure you implement this in your model
 	if err != nil {
@@ -85,7 +83,6 @@ func deleteProduct(context *gin.Context){
 		return
 	}
 
-	
 	Role, exist := context.Get("Role")
 	if !exist {
 		context.JSON(http.StatusUnauthorized, gin.H{"message": "Invalid Role"})
@@ -97,27 +94,80 @@ func deleteProduct(context *gin.Context){
 		return
 	}
 
-	productId,exist := context.Get("Id")
+	productId, exist := context.Get("Id")
 	if !exist {
 		context.JSON(http.StatusUnauthorized, gin.H{"message": "Invalid Role"})
 		return
 	}
 
-	if productId != product.User_Id{
+	if productId != product.User_Id {
 		context.JSON(http.StatusUnauthorized, gin.H{"message": "Not yours to delete"})
 		return
 	}
 
-
 	err = product.DeleteProduct()
-		if err != nil {
+	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
 	}
 
 	context.JSON(http.StatusAccepted, gin.H{"message": "Product Deleted!"})
 
+}
 
-	
+func updateProduct(context *gin.Context) {
+	var updateProduct models.Product
+
+	err := context.ShouldBindJSON(&updateProduct)
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"message": "Invalid input for creating user"})
+		return
+	}
+
+	Id, err := strconv.ParseInt(context.Param("id"), 10, 64)
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"message": "Invalid Id"})
+		return
+	}
+
+	product, err := models.GetProductById(Id)
+	if err != nil {
+		context.JSON(http.StatusNotFound, gin.H{"message": "Product not found"})
+		return
+	}
+
+	updateProduct.Id = product.Id
+	updateProduct.User_Id = product.User_Id
+
+	Role, exist := context.Get("Role")
+	if !exist {
+		context.JSON(http.StatusUnauthorized, gin.H{"message": "Invalid Role"})
+		return
+	}
+
+	if Role != "admin" {
+		context.JSON(http.StatusUnauthorized, gin.H{"message": "Unautorized"})
+		return
+	}
+
+	userId, exist := context.Get("Id")
+	if !exist {
+		context.JSON(http.StatusUnauthorized, gin.H{"message": "Invalid Role"})
+		return
+	}
+
+	if userId != updateProduct.User_Id {
+		context.JSON(http.StatusUnauthorized, gin.H{"message": "Not yours to update"})
+		return
+	}
+
+	err = updateProduct.UpdateProduct()
+
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+		return
+	}
+
+	context.JSON(http.StatusAccepted, gin.H{"message": "Product Updated!"})
 
 }

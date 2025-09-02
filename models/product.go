@@ -7,10 +7,10 @@ import (
 
 type Product struct {
 	Id          int64
-	Name        string
-	Description string
-	Price       float64
-	Quantity    int64
+	Name        string  `binding:"required"`
+	Description string  `binding:"required"`
+	Price       float64 `binding:"required"`
+	Quantity    int64   `binding:"required"`
 	User_Id     int64
 }
 
@@ -70,20 +70,41 @@ func GetProductById(Id int64) (Product, error) {
 	return product, nil
 }
 
-func (product Product)DeleteProduct()error{
+func (product Product) DeleteProduct() error {
 	query := `
 	DELETE FROM products WHERE Id = ?
 	`
 
-	stmt,err := db.DB.Prepare(query)
+	stmt, err := db.DB.Prepare(query)
 	if err != nil {
 		return errors.New("invalid statement")
 	}
 	defer stmt.Close()
 
-	_,err = stmt.Exec(product.Id)
+	_, err = stmt.Exec(product.Id)
 	if err != nil {
 		return errors.New("invalid inputs")
 	}
+	return nil
+}
+
+func (product Product) UpdateProduct() error {
+	query := `
+	UPDATE products 
+	SET Name = ?, Description = ?, Price = ?, Quantity = ? 
+	WHERE Id = ?
+	`
+
+	stmt, err := db.DB.Prepare(query)
+	if err != nil {
+		return errors.New("failed to prepare statement")
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(product.Name, product.Description, product.Price, product.Quantity, product.Id)
+	if err != nil {
+		return errors.New("failed to update product")
+	}
+
 	return nil
 }

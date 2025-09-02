@@ -1,0 +1,11 @@
+PUT http://localhost:8080/product/1
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFbWFpbCI6Im9sYWp1ZG9pZ2dkZGRkc3NzZGdyQGdtYWlsLmNvbSIsIklkIjoxLCJSb2xlIjoiYWRtaW4iLCJleHAiOjE3NTY3ODI3OTR9.VQa-DgL6kAFGklZ8JJ4NZEz19QGz0xob-F4f4kq5goI
+
+{
+    "Name": "update Wiredledss Mossssuse",
+    "Description": "A smooth wireless mouse with ergonomic design",
+    "Price": 25.99,
+    "Quantity": 50
+    
+}
