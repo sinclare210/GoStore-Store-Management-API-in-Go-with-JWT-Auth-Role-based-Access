@@ -1,9 +1,9 @@
 POST http://localhost:8080/product
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFbWFpbCI6Im9sYWp1ZG9pZ2dkZGRkZGRkZ3JAZ21haWwuY29tIiwiSWQiOjUsIlJvbGUiOiJhZG1pbiIsImV4cCI6MTc1Njc3MDIwM30.vMPGv58t949uPJKhX7o81KUX3i1Z6RbTBeO-H77UJhI
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFbWFpbCI6Im9sYWp1ZG9pZ2dkZGRkc3NzZGdyQGdtYWlsLmNvbSIsIklkIjoyLCJSb2xlIjoiYWRtaW4iLCJleHAiOjE3NTY3Nzk1MzB9.VBTz8HHyemZZwBKjmkg-GoKoQKaCCewgGQt-GzKM-LM
 
 {
-    "Name": "Wirelejdjjdss Mouse",
+    "Name": "Wiredledss Mossssuse",
     "Description": "A smooth wireless mouse with ergonomic design",
     "Price": 25.99,
     "Quantity": 50

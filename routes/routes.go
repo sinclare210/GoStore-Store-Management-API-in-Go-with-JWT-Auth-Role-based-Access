@@ -11,6 +11,7 @@ func RegisterRoutes(server *gin.Engine) {
 	authenticated := server.Group("/")
 	authenticated.Use(middleware.Authenticate)
 	authenticated.POST("/product", createProduct)
+	authenticated.DELETE("/product/:id", deleteProduct)
 	server.GET("/product", getProducts)
 	server.GET("/product/:id", getProduct)
 }

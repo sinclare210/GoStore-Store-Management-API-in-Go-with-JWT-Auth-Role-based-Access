@@ -69,3 +69,55 @@ func getProduct(context *gin.Context) {
 	context.JSON(http.StatusOK, gin.H{"message": product})
 
 }
+
+func deleteProduct(context *gin.Context){
+	Id, err := strconv.ParseInt(context.Param("id"), 10, 64)
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"message": "Invalid Id"})
+		return
+	}
+
+	
+
+	product, err := models.GetProductById(Id) // make sure you implement this in your model
+	if err != nil {
+		context.JSON(http.StatusNotFound, gin.H{"message": "Product not found"})
+		return
+	}
+
+	
+	Role, exist := context.Get("Role")
+	if !exist {
+		context.JSON(http.StatusUnauthorized, gin.H{"message": "Invalid Role"})
+		return
+	}
+
+	if Role != "admin" {
+		context.JSON(http.StatusUnauthorized, gin.H{"message": "Unautorized"})
+		return
+	}
+
+	productId,exist := context.Get("Id")
+	if !exist {
+		context.JSON(http.StatusUnauthorized, gin.H{"message": "Invalid Role"})
+		return
+	}
+
+	if productId != product.User_Id{
+		context.JSON(http.StatusUnauthorized, gin.H{"message": "Not yours to delete"})
+		return
+	}
+
+
+	err = product.DeleteProduct()
+		if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+		return
+	}
+
+	context.JSON(http.StatusAccepted, gin.H{"message": "Product Deleted!"})
+
+
+	
+
+}

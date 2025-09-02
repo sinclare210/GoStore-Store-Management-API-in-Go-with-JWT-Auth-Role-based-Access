@@ -69,3 +69,21 @@ func GetProductById(Id int64) (Product, error) {
 
 	return product, nil
 }
+
+func (product Product)DeleteProduct()error{
+	query := `
+	DELETE FROM products WHERE Id = ?
+	`
+
+	stmt,err := db.DB.Prepare(query)
+	if err != nil {
+		return errors.New("invalid statement")
+	}
+	defer stmt.Close()
+
+	_,err = stmt.Exec(product.Id)
+	if err != nil {
+		return errors.New("invalid inputs")
+	}
+	return nil
+}
