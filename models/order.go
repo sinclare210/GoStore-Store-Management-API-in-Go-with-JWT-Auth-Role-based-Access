@@ -7,11 +7,11 @@ import (
 )
 
 type Order struct {
-	Id         int64
-	User_Id    int64
-	Product_Id int64
-	Product_Name string 
-	Product_Price float64 
+	Id            int64
+	User_Id       int64
+	Product_Id    int64
+	Product_Name  string
+	Product_Price float64
 }
 
 func (order *Order) CreateOrder() error {
@@ -26,7 +26,7 @@ func (order *Order) CreateOrder() error {
 	}
 	defer stmt.Close()
 
-	_, err = stmt.Exec(order.User_Id, order.Product_Id,order.Product_Name,order.Product_Price)
+	_, err = stmt.Exec(order.User_Id, order.Product_Id, order.Product_Name, order.Product_Price)
 	if err != nil {
 		return errors.New("failed to create order")
 	}
@@ -35,12 +35,12 @@ func (order *Order) CreateOrder() error {
 
 }
 
-func GetOrdersForUser(id int64) ([]Order,error){
+func GetOrdersForUser(id int64) ([]Order, error) {
 	query := `
 	SELECT * FROM orders WHERE User_Id = ?
 	`
 
-	rows,err := db.DB.Query(query,id)
+	rows, err := db.DB.Query(query, id)
 
 	if err != nil {
 		return nil, errors.New("invalid query")
@@ -48,7 +48,7 @@ func GetOrdersForUser(id int64) ([]Order,error){
 	var orders []Order
 	for rows.Next() {
 		var order Order
-		err = rows.Scan(&order.Id, &order.User_Id, &order.Product_Id,&order.Product_Name,&order.Product_Price)
+		err = rows.Scan(&order.Id, &order.User_Id, &order.Product_Id, &order.Product_Name, &order.Product_Price)
 		if err != nil {
 			return nil, errors.New("invalid output")
 		}
