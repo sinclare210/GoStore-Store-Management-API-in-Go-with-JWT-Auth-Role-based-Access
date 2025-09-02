@@ -1,3 +1,4 @@
-POST http://localhost:8080/order/2
+
+Get http://localhost:8080/order
 Content-Type: application/json
 Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFbWFpbCI6Im9sYWp1ZG9pZ2dkc3NzZGdyQGdtYWlsLmNvbSIsIklkIjoxLCJSb2xlIjoiYWRtaW4iLCJleHAiOjE3NTY4MzgxODF9.Wo-M47xrY33CT2m4AFC-gJP5ZH_mpmsteaTwKMGGYw4

@@ -24,12 +24,15 @@ func createOrder(context *gin.Context) {
 		context.JSON(http.StatusUnauthorized, gin.H{"message": "login"})
 		return
 	}
-	_, err = models.GetProductById(Id) 
+	product, err := models.GetProductById(Id) 
 	if err != nil {
 		context.JSON(http.StatusNotFound, gin.H{"message": "Product not found"})
 		return
 	}
 
+
+	order.Product_Name = product.Name
+	order.Product_Price = product.Price
 	order.User_Id = user_Id.(int64)
 
 	err = order.CreateOrder()
@@ -40,4 +43,20 @@ func createOrder(context *gin.Context) {
 
 	context.JSON(http.StatusCreated, gin.H{"message": "order Created!"})
 
+}
+
+func getOrderByUser(context *gin.Context){
+	user_Id, exist := context.Get("Id")
+	if !exist {
+		context.JSON(http.StatusUnauthorized, gin.H{"message": "login"})
+		return
+	}
+
+	orders,err := models.GetOrdersForUser(user_Id.(int64))
+		if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+		return
+	}
+
+	context.JSON(http.StatusCreated, gin.H{"message": orders})
 }

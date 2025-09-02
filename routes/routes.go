@@ -14,6 +14,7 @@ func RegisterRoutes(server *gin.Engine) {
 	authenticated.DELETE("/product/:id", deleteProduct)
 	authenticated.PUT("/product/:id", updateProduct)
 	authenticated.POST("/order/:id", createOrder)
+	authenticated.GET("/order", getOrderByUser)
 	server.GET("/product", getProducts)
 	server.GET("/product/:id", getProduct)
 }
