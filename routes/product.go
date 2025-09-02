@@ -77,7 +77,7 @@ func deleteProduct(context *gin.Context) {
 		return
 	}
 
-	product, err := models.GetProductById(Id) // make sure you implement this in your model
+	product, err := models.GetProductById(Id) 
 	if err != nil {
 		context.JSON(http.StatusNotFound, gin.H{"message": "Product not found"})
 		return
