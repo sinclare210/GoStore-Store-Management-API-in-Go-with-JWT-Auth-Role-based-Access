@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/sinclare210/GoStore-Store-Management-API-in-Go-with-JWT-Auth-Role-based-Access/models"
+	"github.com/sinclare210/GoStore-Store-Management-API-in-Go-with-JWT-Auth-Role-based-Access/services"
 	"github.com/sinclare210/GoStore-Store-Management-API-in-Go-with-JWT-Auth-Role-based-Access/utils"
 )
 
@@ -17,7 +18,7 @@ func createUser(context *gin.Context) {
 		return
 	}
 
-	err := newUser.CreateUser()
+	err := services.CreateUser(newUser.Name,newUser.Password,newUser.Email,newUser.Role)
 
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
@@ -37,17 +38,17 @@ func loginUser(context *gin.Context) {
 		return
 	}
 
-	err = loginUser.LoginUser(loginUser.Password)
+	user,err := services.LoginUser(loginUser.Email,loginUser.Password)
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
 	}
 
-	token, err := utils.GenerateToken(loginUser.Email, loginUser.Id, loginUser.Role)
+	token, err := utils.GenerateToken(loginUser.Email, int64(user.Id), user.Role)
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
 	}
 
-	context.JSON(http.StatusCreated, gin.H{"message": "Login Successful!", "token": token, "Role": loginUser.Role})
+	context.JSON(http.StatusCreated, gin.H{"message": "Login Successful!", "token": token, "Role": user.Role})
 }

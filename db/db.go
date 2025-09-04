@@ -1,73 +1,23 @@
 package db
 
 import (
-	"database/sql"
-	_ "github.com/mattn/go-sqlite3"
+	"github.com/sinclare210/GoStore-Store-Management-API-in-Go-with-JWT-Auth-Role-based-Access/models"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
 
-var DB *sql.DB
+var DB *gorm.DB
 
 func InitDB() {
 	var err error
 
-	DB, err = sql.Open("sqlite3", "api.db")
+	DB,err = gorm.Open(sqlite.Open("api.db"), &gorm.Config{})
+
+	err = DB.AutoMigrate(&models.User{},&models.Product{},&models.Order{})
 
 	if err != nil {
-		panic("Could not connect to database")
+		panic("Could not create tables")
 	}
-
-	DB.SetMaxOpenConns(10)
-	DB.SetMaxIdleConns(5)
-
-	createTables()
 
 }
 
-func createTables() {
-	createProductsTable := `
-	CREATE TABLE IF NOT EXISTS products (
-    Id INTEGER PRIMARY KEY AUTOINCREMENT, 
-    Name TEXT NOT NULL,
-    Description TEXT NOT NULL,
-    Price REAL NOT NULL CHECK (Price > 0),
-    Quantity INTEGER NOT NULL CHECK (Quantity >= 0),
-	User_Id INTEGER,
-	FOREIGN KEY(User_Id) REFERENCES users(Id)
-);
-`
-	_, err := DB.Exec(createProductsTable)
-	if err != nil {
-		panic("Could not create products table")
-	}
-
-	createUsersTable := `
-	CREATE TABLE IF NOT EXISTS users (
-    Id INTEGER PRIMARY KEY AUTOINCREMENT,
-    Name TEXT NOT NULL,
-    Email TEXT UNIQUE NOT NULL,
-    Password TEXT NOT NULL,
-    Role TEXT DEFAULT 'user'
-);
-`
-
-	_, err = DB.Exec(createUsersTable)
-	if err != nil {
-		panic("Could not create users table")
-	}
-
-	createOrdersTable := `
-CREATE TABLE IF NOT EXISTS orders (
-    Id INTEGER PRIMARY KEY AUTOINCREMENT,
-	User_Id INTEGER NOT NULL,
-	Product_Id INTEGER NOT NULL,
-	Product_Name TEXT NOT NULL,
-	Product_Price REAL,
-	FOREIGN KEY(User_Id) REFERENCES users(Id),
-	FOREIGN KEY(Product_Id) REFERENCES products(Id)
-);
-`
-	_, err = DB.Exec(createOrdersTable)
-	if err != nil {
-		panic("Could not create order table")
-	}
-}

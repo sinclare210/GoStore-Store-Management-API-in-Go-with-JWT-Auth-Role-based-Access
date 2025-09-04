@@ -1,6 +1,7 @@
 package middleware
 
 import (
+
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -22,6 +23,7 @@ func Authenticate(context *gin.Context) {
 	}
 
 	context.Set("Role", Role)
+	
 	context.Set("Id", Id)
 	context.Next()
 }

@@ -1,11 +1,13 @@
 package routes
 
 import (
+
 	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sinclare210/GoStore-Store-Management-API-in-Go-with-JWT-Auth-Role-based-Access/models"
+	"github.com/sinclare210/GoStore-Store-Management-API-in-Go-with-JWT-Auth-Role-based-Access/services"
 )
 
 func createProduct(context *gin.Context) {
@@ -13,7 +15,7 @@ func createProduct(context *gin.Context) {
 
 	err := context.ShouldBindJSON(&product)
 	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"message": "Invalid input for creating user"})
+		context.JSON(http.StatusBadRequest, gin.H{"message": "Invalid input for creating product"})
 		return
 	}
 
@@ -22,7 +24,7 @@ func createProduct(context *gin.Context) {
 		context.JSON(http.StatusUnauthorized, gin.H{"message": "Invalid Role"})
 		return
 	}
-
+	
 	if Role != "admin" {
 		context.JSON(http.StatusUnauthorized, gin.H{"message": "Unautorized"})
 		return
@@ -30,9 +32,9 @@ func createProduct(context *gin.Context) {
 
 	Id, _ := context.Get("Id")
 
-	product.User_Id = Id.(int64)
+	product.UserID = uint(Id.(int64))
 
-	err = product.CreateProducts()
+	services.CreateProducts(product.Name,product.Description,product.Price,product.Quantity,product.UserID)
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
@@ -44,7 +46,7 @@ func createProduct(context *gin.Context) {
 
 func getProducts(context *gin.Context) {
 
-	products, err := models.GetProducts()
+	products, err := services.GetProducts()
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
@@ -60,7 +62,7 @@ func getProduct(context *gin.Context) {
 		return
 	}
 
-	product, err := models.GetProductById(Id)
+	product, err := services.GetProductById(uint(Id))
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
@@ -71,13 +73,13 @@ func getProduct(context *gin.Context) {
 }
 
 func deleteProduct(context *gin.Context) {
-	Id, err := strconv.ParseInt(context.Param("id"), 10, 64)
+	Id, err := strconv.ParseUint(context.Param("id"), 10, 64)
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"message": "Invalid Id"})
 		return
 	}
 
-	product, err := models.GetProductById(Id)
+	product,err := services.GetProductById(uint(Id))
 	if err != nil {
 		context.JSON(http.StatusNotFound, gin.H{"message": "Product not found"})
 		return
@@ -100,12 +102,12 @@ func deleteProduct(context *gin.Context) {
 		return
 	}
 
-	if productId != product.User_Id {
+	if uint(productId.(int64)) != product.UserID {
 		context.JSON(http.StatusUnauthorized, gin.H{"message": "Not yours to delete"})
 		return
 	}
 
-	err = product.DeleteProduct()
+	services.DeleteProduct(uint(Id))
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
@@ -130,14 +132,14 @@ func updateProduct(context *gin.Context) {
 		return
 	}
 
-	product, err := models.GetProductById(Id)
+	product, err := services.GetProductById(uint(Id))
 	if err != nil {
 		context.JSON(http.StatusNotFound, gin.H{"message": "Product not found"})
 		return
 	}
 
 	updateProduct.Id = product.Id
-	updateProduct.User_Id = product.User_Id
+	updateProduct.UserID = product.UserID
 
 	Role, exist := context.Get("Role")
 	if !exist {
@@ -156,12 +158,12 @@ func updateProduct(context *gin.Context) {
 		return
 	}
 
-	if userId != updateProduct.User_Id {
+	if uint(userId.(int64)) != updateProduct.UserID {
 		context.JSON(http.StatusUnauthorized, gin.H{"message": "Not yours to update"})
 		return
 	}
 
-	err = updateProduct.UpdateProduct()
+	err = services.UpdateProduct(uint(Id))
 
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})

@@ -1,11 +1,13 @@
 package routes
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sinclare210/GoStore-Store-Management-API-in-Go-with-JWT-Auth-Role-based-Access/models"
+	"github.com/sinclare210/GoStore-Store-Management-API-in-Go-with-JWT-Auth-Role-based-Access/services"
 )
 
 func createOrder(context *gin.Context) {
@@ -17,24 +19,26 @@ func createOrder(context *gin.Context) {
 
 	var order models.Order
 
-	order.Product_Id = Id
+	order.ProductID = uint(Id)
 
 	user_Id, exist := context.Get("Id")
 	if !exist {
 		context.JSON(http.StatusUnauthorized, gin.H{"message": "login"})
 		return
 	}
-	product, err := models.GetProductById(Id)
+	product, err := services.GetProductById(uint(Id))
 	if err != nil {
 		context.JSON(http.StatusNotFound, gin.H{"message": "Product not found"})
 		return
 	}
 
-	order.Product_Name = product.Name
-	order.Product_Price = product.Price
-	order.User_Id = user_Id.(int64)
+	order.ProductName = product.Name
+	order.ProductPrice = product.Price
+	order.UserID = uint(user_Id.(int64))
 
-	err = order.CreateOrder()
+	fmt.Println(&product)
+
+	err = services.CreateOrder(order.UserID,order.ProductID,order.ProductName,order.ProductPrice)
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
@@ -51,7 +55,7 @@ func getOrderByUser(context *gin.Context) {
 		return
 	}
 
-	orders, err := models.GetOrdersForUser(user_Id.(int64))
+	orders, err := services.GetOrdersForUser(uint(user_Id.(int64)))
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
