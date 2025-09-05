@@ -106,7 +106,7 @@ func deleteProduct(context *gin.Context) {
 		return
 	}
 
-	services.DeleteProduct(uint(Id))
+	err = services.DeleteProduct(uint(Id))
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
