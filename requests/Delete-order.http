@@ -1,0 +1,3 @@
+DELETE  http://localhost:8080/order/1
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFbWFpbCI6Im9sYWp1ZGdnZHNzc2RnckBnbWFpbC5jb20iLCJJZCI6MiwiUm9sZSI6ImFkbWluIiwiZXhwIjoxNzU3MDY3OTIyfQ.wvU6OgOgN40YFTDzAeeJI0AgSD4Umcvmn1uac7fIyJg
