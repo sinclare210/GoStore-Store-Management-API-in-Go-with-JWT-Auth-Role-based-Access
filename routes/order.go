@@ -38,7 +38,7 @@ func createOrder(context *gin.Context) {
 
 	fmt.Println(&product)
 
-	err = services.CreateOrder(order.UserID,order.ProductID,order.ProductName,order.ProductPrice)
+	err = services.CreateOrder(order.UserID, order.ProductID, order.ProductName, order.ProductPrice)
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
@@ -63,4 +63,3 @@ func getOrderByUser(context *gin.Context) {
 
 	context.JSON(http.StatusCreated, gin.H{"message": orders})
 }
-

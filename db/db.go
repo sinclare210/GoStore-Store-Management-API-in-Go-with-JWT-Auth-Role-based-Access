@@ -11,13 +11,12 @@ var DB *gorm.DB
 func InitDB() {
 	var err error
 
-	DB,err = gorm.Open(sqlite.Open("api.db"), &gorm.Config{})
+	DB, err = gorm.Open(sqlite.Open("api.db"), &gorm.Config{})
 
-	err = DB.AutoMigrate(&models.User{},&models.Product{},&models.Order{})
+	err = DB.AutoMigrate(&models.User{}, &models.Product{}, &models.Order{})
 
 	if err != nil {
 		panic("Could not create tables")
 	}
 
 }
-

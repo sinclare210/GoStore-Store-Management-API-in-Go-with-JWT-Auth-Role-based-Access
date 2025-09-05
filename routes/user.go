@@ -18,7 +18,7 @@ func createUser(context *gin.Context) {
 		return
 	}
 
-	err := services.CreateUser(newUser.Name,newUser.Password,newUser.Email,newUser.Role)
+	err := services.CreateUser(newUser.Name, newUser.Password, newUser.Email, newUser.Role)
 
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
@@ -38,7 +38,7 @@ func loginUser(context *gin.Context) {
 		return
 	}
 
-	user,err := services.LoginUser(loginUser.Email,loginUser.Password)
+	user, err := services.LoginUser(loginUser.Email, loginUser.Password)
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return

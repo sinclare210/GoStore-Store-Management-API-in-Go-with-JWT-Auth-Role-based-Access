@@ -1,7 +1,6 @@
 package routes
 
 import (
-
 	"net/http"
 	"strconv"
 
@@ -24,7 +23,7 @@ func createProduct(context *gin.Context) {
 		context.JSON(http.StatusUnauthorized, gin.H{"message": "Invalid Role"})
 		return
 	}
-	
+
 	if Role != "admin" {
 		context.JSON(http.StatusUnauthorized, gin.H{"message": "Unautorized"})
 		return
@@ -34,14 +33,14 @@ func createProduct(context *gin.Context) {
 
 	product.UserID = uint(Id.(int64))
 
-	services.CreateProducts(product.Name,product.Description,product.Price,product.Quantity,product.UserID)
+	err = services.CreateProducts(product.Name, product.Description, product.Price, product.Quantity, product.UserID)
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
 	}
 
 	context.JSON(http.StatusCreated, gin.H{"message": "Product Created!"})
-
+ .
 }
 
 func getProducts(context *gin.Context) {
@@ -79,7 +78,7 @@ func deleteProduct(context *gin.Context) {
 		return
 	}
 
-	product,err := services.GetProductById(uint(Id))
+	product, err := services.GetProductById(uint(Id))
 	if err != nil {
 		context.JSON(http.StatusNotFound, gin.H{"message": "Product not found"})
 		return
