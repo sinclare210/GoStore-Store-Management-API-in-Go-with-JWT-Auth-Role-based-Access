@@ -19,6 +19,9 @@ func GetOrdersForUser(id uint) ([]models.Order, error) {
 	var orders []models.Order
 
 	err := db.DB.Where("user_id = ?", id).Find(&orders).Error
+	
 	return orders, err
 
 }
+
+

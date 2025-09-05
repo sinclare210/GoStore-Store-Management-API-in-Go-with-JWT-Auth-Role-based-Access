@@ -31,12 +31,11 @@ func createOrder(context *gin.Context) {
 		context.JSON(http.StatusNotFound, gin.H{"message": "Product not found"})
 		return
 	}
+	fmt.Println(product)
 
 	order.ProductName = product.Name
 	order.ProductPrice = product.Price
 	order.UserID = uint(user_Id.(int64))
-
-	fmt.Println(&product)
 
 	err = services.CreateOrder(order.UserID, order.ProductID, order.ProductName, order.ProductPrice)
 	if err != nil {

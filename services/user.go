@@ -2,7 +2,6 @@ package services
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/sinclare210/GoStore-Store-Management-API-in-Go-with-JWT-Auth-Role-based-Access/db"
 	"github.com/sinclare210/GoStore-Store-Management-API-in-Go-with-JWT-Auth-Role-based-Access/models"
@@ -30,7 +29,7 @@ func LoginUser(email, password string) (*models.User, error) {
 	if result.Error != nil {
 		return &models.User{}, result.Error
 	}
-	fmt.Print(user)
+	
 
 	err := utils.CheckHashPassWord(user.Password, password)
 	if err != nil {
